@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:festival_diary_app/constants/baseurl_constant.dart';
 import 'package:festival_diary_app/models/user_tb.dart';
 
 class UserAPI {
@@ -20,8 +21,8 @@ class UserAPI {
           ),
       });
 
-      final responseData = dio.post(
-        'http://172.17.34.23:2424/user/',
+      final responseData = await dio.post(
+        '${baseUrl}/user/',
         data: formData,
         options: Options(headers: {'Content-Type': 'multipart/form-data'}),
       );
@@ -35,8 +36,22 @@ class UserAPI {
       return false;
     }
   }
-}
 
-extension on Future<Response> {
-  get statusCode => null;
+  //สร้างเมธอดเรียกใช้ API ให้เอาชื่อผู้ใช้และรหัสผ่านไปตรวจสอบ
+  Future<UserTb> checkLogin(UserTb user) async {
+    try {
+      final responseData = await dio.get(
+        '${baseUrl}/user/${user.userName}/${user.userPassword}',
+      );
+      if (responseData.statusCode == 200) {
+        //ถ้าสำเร็จให้แปลงข้อมูลที่ได้จาก API เป็น UserTb
+        return UserTb.fromJson(responseData.data['info']);
+      } else {
+        return UserTb();
+      }
+    } catch (e) {
+      print('Exception: $e');
+      return UserTb();
+    }
+  }
 }

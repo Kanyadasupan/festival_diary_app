@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:festival_diary_app/constants/color_constant.dart';
 import 'package:festival_diary_app/models/user_tb.dart';
 import 'package:festival_diary_app/services/user_api.dart';
 import 'package:flutter/material.dart';
@@ -178,17 +179,15 @@ class _RegisterUiState extends State<RegisterUi> {
                       } else {
                         //แพ็กข้อมูล แล้วส่งผ่าน API ไปบันทึกลง DB
                         UserTb user = UserTb(
-                          userFullname: userFullnameCtrl.text.trim(),
-                          userName: userNameCtrl.text.trim(),
-                          userPassword: userPasswordCtrl.text.trim(),
+                          userFullname: userFullnameCtrl.text,
+                          userName: userNameCtrl.text,
+                          userPassword: userPasswordCtrl.text,
                         );
-
                         if (await UserAPI().regiterUser(user, userFile)) {
                           shoeCompleteSnakeBar(
                             context,
                             'ลงทะเบียนเรียบร้อยแล้ว',
                           );
-                          Navigator.pop(context);
                         } else {
                           shoeCompleteSnakeBar(context, 'ลงทะเบียนไม่สำเร็จ');
                         }
@@ -199,7 +198,7 @@ class _RegisterUiState extends State<RegisterUi> {
                       style: TextStyle(color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF00FFFF),
+                      backgroundColor: mainColor,
                       fixedSize: Size(MediaQuery.of(context).size.width, 55.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
